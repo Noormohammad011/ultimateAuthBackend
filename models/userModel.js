@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema(
     salt: String,
     role: {
       type: String,
-      enum: ['user', 'subscriber'],
+      enum: ['admin', 'subscriber'],
       default: 'subscriber',
     },
     resetPasswordLink: {
