@@ -122,7 +122,7 @@ const userProfile = expressAsyncHandler(async (req, res) => {
   })
 })
 
-const updateUserProfile = expressAsyncHandler(async (req, res) => {
+const updateProfile = expressAsyncHandler(async (req, res) => {
   const { _id: UserId } = req.auth
   const { name, password } = req.body
 
@@ -158,9 +158,9 @@ const updateUserProfile = expressAsyncHandler(async (req, res) => {
       }
       updatedUser.hashed_password = undefined
       updatedUser.salt = undefined
-      res.json({updatedUser})
+      res.json({ updatedUser })
     })
   })
 })
 
-export { signUp, accountActivation, signIn, userProfile, updateUserProfile }
+export { signUp, accountActivation, signIn, userProfile, updateProfile }

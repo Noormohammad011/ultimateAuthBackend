@@ -8,18 +8,23 @@ const requireSignin = jwt({
   algorithms: ['HS256'],
 })
 
-// Grant access to specific roles
-const authorize = (...roles) => {
-  return asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.auth._id).exec()
-    if (!roles.includes(user.role)) {
-      return next(
-        res.status(403).json({
-          error: `User role ${user.role} is not authorized to access this route`,
-        })
-      )
+
+const adminMiddleware = (req, res, next) => {
+  User.findById({ _id: req.auth._id }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'User not found',
+      })
     }
+
+    if (user.role !== 'admin') {
+      return res.status(400).json({
+        error: 'Admin resource. Access denied.',
+      })
+    }
+
+    req.profile = user
     next()
   })
 }
-export { requireSignin, authorize }
+export { requireSignin, adminMiddleware }
