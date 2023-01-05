@@ -13,4 +13,25 @@ const userSigninValidator = [
     .isLength({ min: 6 })
     .withMessage('Password must be at least  6 characters long'),
 ]
-export { userSignupValidator, userSigninValidator }
+
+const forgotPasswordValidator = [
+  check('email')
+    .not()
+    .isEmpty()
+    .isEmail()
+    .withMessage('Must be a valid email address'),
+]
+
+const resetPasswordValidator = [
+  check('newPassword')
+    .not()
+    .isEmpty()
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least  6 characters long'),
+]
+export {
+  userSignupValidator,
+  userSigninValidator,
+  forgotPasswordValidator,
+  resetPasswordValidator,
+}
