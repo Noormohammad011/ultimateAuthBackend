@@ -81,29 +81,86 @@ const accountActivation = expressAsyncHandler(async (req, res) => {
 })
 
 const signIn = expressAsyncHandler(async (req, res) => {
-    const { email, password } = req.body
-      User.findOne({ email }).exec((err, user) => {
-        if (err || !user) {
-          return res.status(400).json({
-            error: 'User with that email does not exist. Please signup',
-          })
-        }
-        // authenticate
-        if (!user.authenticate(password)) {
-          return res.status(400).json({
-            error: 'Email and password do not match',
-          })
-        }
-        // generate a token and send to client
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: '7d',
-        })
-        const { _id, name, email, role } = user
-
-        return res.json({
-          token,
-          user: { _id, name, email, role },
-        })
+  const { email, password } = req.body
+  User.findOne({ email }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'User with that email does not exist. Please signup',
       })
+    }
+    // authenticate
+    if (!user.authenticate(password)) {
+      return res.status(400).json({
+        error: 'Email and password do not match',
+      })
+    }
+    // generate a token and send to client
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    })
+    const { _id, name, email, role } = user
+
+    return res.json({
+      token,
+      user: { _id, name, email, role },
+    })
+  })
 })
-export { signUp, accountActivation, signIn }
+
+const userProfile = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params
+  User.findById(id).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'User not found',
+      })
+    }
+    const { _id, name, email, role } = user
+    return res.json({
+      user: { _id, name, email, role },
+    })
+  })
+})
+
+const updateUserProfile = expressAsyncHandler(async (req, res) => {
+  const { _id: UserId } = req.auth
+  const { name, password } = req.body
+
+  User.findById(UserId).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'User not found',
+      })
+    }
+
+    if (!name) {
+      return res.status(400).json({
+        error: 'Name is required',
+      })
+    } else {
+      user.name = name
+    }
+    if (password) {
+      if (password.length < 6) {
+        return res.status(400).json({
+          error: 'Password should be min 6 characters long',
+        })
+      } else {
+        user.password = password
+      }
+    }
+    user.save((err, updatedUser) => {
+      if (err) {
+        console.log('USER UPDATE ERROR', err)
+        return res.status(400).json({
+          error: 'User update failed. Try again',
+        })
+      }
+      updatedUser.hashed_password = undefined
+      updatedUser.salt = undefined
+      res.json({updatedUser})
+    })
+  })
+})
+
+export { signUp, accountActivation, signIn, userProfile, updateUserProfile }
