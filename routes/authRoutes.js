@@ -20,4 +20,10 @@ router.post('/account-activation', accountActivation)
 router.post('/signin', userSigninValidator, runValidation, signIn)
 router.get('/user/:id', requireSignin, userProfile)
 router.put('/user/update', requireSignin, authorize('admin'), updateUserProfile)
+router.put(
+  '/user/update',
+  requireSignin,
+  authorize('subscriber'),
+  updateUserProfile
+)
 export default router
