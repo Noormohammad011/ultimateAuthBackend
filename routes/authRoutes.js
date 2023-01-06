@@ -7,6 +7,7 @@ import {
   updateProfile,
   forgotPassword,
   resetPassword,
+  googleLogin,
 } from '../controllers/authControllers.js'
 
 import runValidation from '../validators/index.js'
@@ -37,5 +38,7 @@ router.put(
   runValidation,
   resetPassword
 )
+
+router.post('/google-login', googleLogin)
 
 export default router
