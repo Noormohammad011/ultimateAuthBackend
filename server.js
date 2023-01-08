@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import 'express-async-errors'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
-
+import compression from 'express-compression'
 //import routes
 import authRoutes from './routes/authRoutes.js'
 
@@ -21,6 +21,7 @@ const app = express()
 //conncet to database
 connectDB()
 //morgan
+app.use(compression())
 app.use(morgan('dev'))
 
 // For parsing application/json
