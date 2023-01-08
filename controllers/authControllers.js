@@ -312,11 +312,11 @@ const googleLogin = expressAsyncHandler(async (req, res) => {
        }
      })
  })
-//https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}
+
 //https://www.facebook.com/dialog/oauth?client_id=${userID}/&fields=id,name,email&access_token=${accessToken}&redirect_uri=https://amazing-sorbet-063a48.netlify.app/accounts/facebook/login/callback/
 const facebookLogin = expressAsyncHandler(async (req, res) => {
    const { userID, accessToken } = req.body
-   const url = `https://www.facebook.com/dialog/oauth?client_id=${userID}/&fields=id,name,email&access_token=${accessToken}&redirect_uri=https://amazing-sorbet-063a48.netlify.app/accounts/facebook/login/callback`
+   const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`
    return (
      fetch(url, {
        method: 'GET',
