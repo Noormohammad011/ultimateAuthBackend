@@ -8,6 +8,7 @@ import {
   forgotPassword,
   resetPassword,
   googleLogin,
+  facebookLogin,
 } from '../controllers/authControllers.js'
 
 import runValidation from '../validators/index.js'
@@ -40,5 +41,6 @@ router.put(
 )
 
 router.post('/google-login', googleLogin)
+router.post('/facebook-login', facebookLogin)
 
 export default router
